@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Open larger file readers with an expand/restore control and pointer/keyboard resizing; PDF pages redraw on resize and offer zoom and fit-width controls.
+- Preview existing assignment and draft attachments, including supported slides and Office files, without replacing their native links, forms, or submission controls.
+- Build the Home course deck and count from native pinned sites, excluding Recent entries, updating after pin changes, and showing an empty state when no courses are pinned.
 - Start Aether automatically on the bare LMS domain (`/`) and Sakai entry URLs with repeated leading slashes, including `//portal`, while retaining the LMS host and route restrictions.
 - Apply the theme, Aether toggle, and ambient field to the public gateway without adding a course workspace or replacing the native sign-in form.
 - Add real-extension regressions for entry routes, late Home markup, gateway form submission and toggles, double-slash file previews, and unrelated-path exclusion.

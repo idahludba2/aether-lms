@@ -29,7 +29,7 @@ To update, back up your current folder, replace its contents with the new versio
 
 | Area | What Aether adds |
 |---|---|
-| Home | A redesigned workspace with course cards, course shortcuts, and links to activity found on the current page. |
+| Home | A redesigned workspace with cards for your pinned courses, course shortcuts, and links to activity found on the current page. Recent unpinned courses are excluded. |
 | Navigation | Reorder course and tool shortcuts with drag-and-drop or keyboard buttons; your order is saved locally. |
 | Appearance | Dark panels, mint and cyan accents, bundled fonts, page-wide stars, glowing sparkles, pointer glow, and contour lines. |
 | Folded field | A procedural 3D particle sculpture with progressive startup and a Canvas fallback when WebGL is unavailable. |
@@ -39,7 +39,7 @@ To update, back up your current folder, replace its contents with the new versio
 | Gradebook | Cards for read-only grade summaries, including scores, feedback, and release states. Editable grade grids and comparison tables keep their layout with matching styling. |
 | Roster | Matching cards, photo views, and tables, retaining permitted profile details, groups, search, sorting, and pagination. |
 | Other lists | Recognized announcement and activity lists receive matching styling where supported. |
-| File previews | Read supported files inside the LMS without sending them to an external conversion service. See the formats below. |
+| File previews | Read supported Resources files and assignment/draft attachments inside the LMS, with larger readers, resizing, and expand/restore controls. Files stay local to the LMS and bundled reader. See the formats below. |
 | Copyright notices | Read the native notice in the preview and choose **Yes, accept and preview** to continue in the same panel. Acceptance requires your click. |
 | Hover behavior | Hover briefly to preview; moving away from both the resource and panel closes it immediately. Select **Preview** to keep a reader open. |
 | Accessibility | Keyboard controls, visible focus, Escape to close previews, responsive layouts, and support for your system's reduced-motion preference. |
@@ -50,6 +50,8 @@ Native authentication, access permissions, forms, and actions remain in Sakai. A
 ## Preview formats
 
 Hover over a resource or select **Preview**. Use **Open original** whenever you need the native file or application.
+
+Selecting **Preview** opens a larger reader that stays open while you read. Use **Expand** to fill the window, **Restore** to return, or drag the bottom-right corner to resize. You can also focus the resize button and use the arrow keys. PDF readers offer zoom, **Fit page**, and **Fit width**; wide or enlarged pages can be scrolled. Supported file links in assignments and saved drafts have the same Preview control alongside the original link.
 
 | Format | Preview |
 |---|---|

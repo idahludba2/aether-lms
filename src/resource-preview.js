@@ -1,9 +1,11 @@
-/* Small, read-only resource peeks. Native anchors/forms keep their handlers. */
+/* Read-only file readers. Native anchors/forms keep their handlers. */
 (() => {
  'use strict';
  let host;try{if(top.location.hostname!=='lms.lums.edu.pk'||!/^\/+(?:portal(?:\/|$)|$)/.test(top.location.pathname))return;host=top.document;}catch{return;}
  const origin=top.location.origin,baseURL=/^https:/.test(document.baseURI)?document.baseURI:top.location.href;
  const own='[data-ae-preview-control]',cache=new Map(),MAX=12*1024*1024;
+ const targetSelector='.ae-record-card[data-ae-kind="resource"],[data-ae-attachment]';
+ const attachmentControls=new Map(),attachmentOwners=new WeakMap();
  let pending=0,hoverCard=null,queued=false,current=null,cacheBytes=0;
  const enabled=()=>host.documentElement.classList.contains('aether-enabled');
  const clean=v=>String(v||'').replace(/\s+/g,' ').trim();
@@ -16,10 +18,11 @@
   if(cache.has(key)){cacheBytes-=cache.get(key).size;cache.delete(key);}cache.set(key,{value,size});cacheBytes+=size;
   while(cache.size>6||cacheBytes>24*1024*1024){const key=cache.keys().next().value;cacheBytes-=cache.get(key).size;cache.delete(key);}
  }
- function active(state){return current===state&&state.panel.isConnected&&enabled()&&state.info.card.isConnected&&state.info.card.matches('.ae-record-card[data-ae-kind="resource"]')&&!!state.info.card.getClientRects().length;}
+ function active(state){return current===state&&state.panel.isConnected&&enabled()&&state.info.card.isConnected&&state.info.card.matches(targetSelector)&&!!state.info.card.getClientRects().length;}
+ function triggerFor(card){return attachmentControls.get(card)?.querySelector('[data-ae-preview-open]')||card.querySelector('[data-ae-preview-open]');}
  function cancelHover(){clearTimeout(pending);pending=0;hoverCard=null;}
  function close(restoreFocus=false){cancelHover();
-  const state=current;current=null;if(!state)return;state.abort.abort();clearTimeout(state.timeout);clearTimeout(state.requestTimeout);state.objectURL&&URL.revokeObjectURL(state.objectURL);state.panel.remove();if(restoreFocus===true)state.info.card.querySelector('[data-ae-preview-open]')?.focus({preventScroll:true});
+  const state=current;current=null;if(!state)return;state.abort.abort();clearTimeout(state.timeout);clearTimeout(state.requestTimeout);state.objectURL&&URL.revokeObjectURL(state.objectURL);state.panel.remove();if(restoreFocus===true)triggerFor(state.info.card)?.focus({preventScroll:true});
  }
  const contains=(parent,node)=>!!node?.nodeType&&parent.contains(node);
  function leavePreview(target){if(current&&!current.pinned&&!contains(current.info.card,target)&&!contains(current.panel,target))close();}
@@ -29,10 +32,26 @@
  function position(state){
   let r=state.info.card.getBoundingClientRect(),win=window,left=r.left,topPos=r.top;
   while(win!==top){try{const frame=win.frameElement,b=frame.getBoundingClientRect();left+=b.left+frame.clientLeft;topPos+=b.top+frame.clientTop;win=win.parent;}catch{break;}}
-  const documentView=['office','archive'].includes(state.info.kind),w=Math.min(documentView?660:370,top.innerWidth-24),h=Math.min(documentView?620:state.info.kind==='pdf'?520:390,top.innerHeight-24);
+  const documentView=['pdf','office','archive'].includes(state.info.kind),maxW=Math.max(1,top.innerWidth-24),maxH=Math.max(1,top.innerHeight-24);
+  const preferred=state.size||{width:documentView?(state.pinned?960:640):(state.pinned?640:420),height:documentView?(state.pinned?800:640):440};
+  const w=state.expanded?maxW:Math.max(Math.min(320,maxW),Math.min(preferred.width,maxW)),h=state.expanded?maxH:Math.max(Math.min(260,maxH),Math.min(preferred.height,maxH));
   let x=left+r.width+12;if(x+w>top.innerWidth-12)x=left-w-12;if(x<12)x=top.innerWidth-w-12;
-  state.panel.style.width=w+'px';state.panel.style.maxHeight=h+'px';state.panel.style.left=Math.max(12,x)+'px';state.panel.style.top=Math.max(12,Math.min(topPos,top.innerHeight-h-12))+'px';
-  if(['pdf','office','archive'].includes(state.info.kind))state.body.style.height=Math.max(160,h-112)+'px';
+  if(state.pinned){x=(top.innerWidth-w)/2;topPos=(top.innerHeight-h)/2;}
+  if(state.anchor){x=state.anchor.x;topPos=state.anchor.y;}
+  if(state.expanded){x=12;topPos=12;}
+  Object.assign(state.panel.style,{width:w+'px',height:h+'px',maxHeight:maxH+'px',left:Math.max(12,Math.min(x,top.innerWidth-w-12))+'px',top:Math.max(12,Math.min(topPos,top.innerHeight-h-12))+'px'});
+  state.expand?.setAttribute('aria-label',state.expanded?'Restore preview size':'Expand preview');
+  if(state.expand)state.expand.textContent=state.expanded?'Restore':'Expand';
+  if(state.resize)state.resize.disabled=Boolean(state.expanded);
+ }
+ function resizeControls(state){
+  const handle=state.resize=el('button','ae-preview-resize','↘');handle.type='button';handle.setAttribute('aria-label','Resize preview');handle.title='Drag to resize, or focus and use arrow keys';state.panel.append(handle);
+  let drag=null;
+  const resize=(width,height)=>{state.pinned=true;state.size={width,height};position(state);};
+  handle.addEventListener('pointerdown',e=>{if(e.button!==0)return;e.preventDefault();const r=state.panel.getBoundingClientRect();state.anchor={x:r.x,y:r.y};drag={x:e.clientX,y:e.clientY,width:r.width,height:r.height};state.pinned=true;handle.setPointerCapture(e.pointerId);state.panel.dataset.resizing='true';});
+  handle.addEventListener('pointermove',e=>{if(drag)resize(drag.width+e.clientX-drag.x,drag.height+e.clientY-drag.y);});
+  const end=()=>{drag=null;delete state.panel.dataset.resizing;};handle.addEventListener('pointerup',end);handle.addEventListener('lostpointercapture',end);handle.addEventListener('pointercancel',end);
+  handle.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();const r=state.panel.getBoundingClientRect();state.anchor={x:r.x,y:r.y};resize(r.width+(e.key==='ArrowRight'?32:e.key==='ArrowLeft'?-32:0),r.height+(e.key==='ArrowDown'?32:e.key==='ArrowUp'?-32:0));});
  }
  function metadata(state){const {info}=state;state.body.replaceChildren();
   state.body.append(el('div','ae-preview-file-mark',info.type||'LINK'));
@@ -114,12 +133,14 @@
   finally{clearTimeout(state.requestTimeout);}
  }
  async function open(card,keyboard=false){
-  cancelHover();if(!enabled()||!card.isConnected)return;if(current?.info.card===card){if(keyboard){current.pinned=true;current.panel.querySelector('button')?.focus();}return;}
+  cancelHover();if(!enabled()||!card.isConnected)return;if(current?.info.card===card){if(keyboard){current.pinned=true;position(current);current.panel.querySelector('button')?.focus();}return;}
   close();host.dispatchEvent(new Event('aether-preview-close-all'));const data=info(card);if(!data)return;host.querySelector('#aether-resource-preview')?.remove();
   const panel=el('aside','ae-resource-preview');panel.id='aether-resource-preview';panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','false');panel.setAttribute('aria-label','Resource preview: '+data.title);
-  const head=el('div','ae-preview-head'),title=el('div','');title.append(el('span','ae-preview-kind',data.kind==='pdf'?'PDF preview':data.kind==='folder'?'Folder contents':'Resource preview'),el('h3','',data.title));const dismiss=el('button','ae-preview-close','×');dismiss.type='button';dismiss.setAttribute('aria-label','Close resource preview');dismiss.onclick=()=>{close();if(keyboard)data.card.querySelector('[data-ae-preview-open]')?.focus();};head.append(title,dismiss);
+  const head=el('div','ae-preview-head'),title=el('div','');title.append(el('span','ae-preview-kind',data.kind==='pdf'?'PDF preview':data.kind==='folder'?'Folder contents':'Resource preview'),el('h3','',data.title));const dismiss=el('button','ae-preview-close','×');dismiss.type='button';dismiss.setAttribute('aria-label','Close resource preview');dismiss.onclick=()=>close(true);
+  const actions=el('div','ae-preview-window-actions'),expand=el('button','ae-preview-expand','Expand');expand.type='button';expand.setAttribute('aria-label','Expand preview');actions.append(expand,dismiss);head.append(title,actions);
   const body=el('div','ae-preview-body'),footer=el('div','ae-preview-footer'),original=el('button','ae-preview-open',data.kind==='folder'?'Open folder':'Open original');original.type='button';original.onclick=()=>{close();data.a.click();};footer.append(original,el('span','','Preview only'));panel.append(head,body,footer);
-  const state={panel,body,info:data,pinned:keyboard,abort:new AbortController()};current=state;host.body.append(panel);position(state);
+  const state={panel,body,info:data,pinned:keyboard,expand,abort:new AbortController()};current=state;host.body.append(panel);resizeControls(state);position(state);
+  expand.onclick=()=>{state.pinned=true;state.expanded=!state.expanded;position(state);};
   panel.addEventListener('pointerleave',e=>{if(current===state)leavePreview(e.relatedTarget);});
   // Explicit clicks and keyboard interaction keep the reader stable. Ordinary
   // hover previews close in the leave event itself, without a grace timer.
@@ -129,27 +150,37 @@
   panel.addEventListener('focusout',e=>{if(current===state&&e.relatedTarget&&!contains(panel,e.relatedTarget)&&!contains(data.card,e.relatedTarget))close();});
   if(keyboard)dismiss.focus();await load(state);
  }
- function hover(e){const card=e.target.closest?.('.ae-record-card[data-ae-kind="resource"]');if(card&&e.target.closest('button:not([data-ae-preview-open]),input,select,.dropdown-menu,.dropdown-toggle')){cancelHover();if(current?.info.card===card&&!current.pinned)close();return;}if(!card||contains(card,e.relatedTarget)||current?.pinned||current?.info.card===card)return;close();hoverCard=card;pending=setTimeout(()=>{if(hoverCard===card)open(card);},320);}
- function leave(e){const card=e.target.closest?.('.ae-record-card[data-ae-kind="resource"]');if(card&&!contains(card,e.relatedTarget)){if(hoverCard===card)cancelHover();if(current?.info.card===card)leavePreview(e.relatedTarget);}}
+ function hover(e){const card=e.target.closest?.(targetSelector);if(card&&e.target.closest('button:not([data-ae-preview-open]),input,select,.dropdown-menu,.dropdown-toggle')){cancelHover();if(current?.info.card===card&&!current.pinned)close();return;}if(!card||contains(card,e.relatedTarget)||current?.pinned||current?.info.card===card)return;close();hoverCard=card;pending=setTimeout(()=>{if(hoverCard===card)open(card);},320);}
+ function leave(e){const card=e.target.closest?.(targetSelector);if(card&&!contains(card,e.relatedTarget)){if(hoverCard===card)cancelHover();if(current?.info.card===card)leavePreview(e.relatedTarget);}}
+ function attachmentInfo(a){
+  if(a.closest('.ae-record-card[data-ae-kind="resource"],#aether-workspace,.ae-resource-preview,nav,[role="navigation"],.dropdown-menu,[contenteditable="true"],.cke,.tox'))return null;
+  const data=info(a);return contentURL(data?.u)&&data.kind!=='folder'?data:null;
+ }
  function sync(){queued=false;
-  if(!enabled()){close();cache.clear();cacheBytes=0;document.querySelectorAll(own).forEach(n=>n.remove());return;}
+  for(const [a,wrap]of attachmentControls)if(!enabled()||!a.isConnected||!wrap.isConnected||!attachmentInfo(a)){wrap.remove();a.removeAttribute('data-ae-attachment');attachmentControls.delete(a);}
+  if(!enabled()){close();cache.clear();cacheBytes=0;document.querySelectorAll(own).forEach(n=>n.remove());document.querySelectorAll('[data-ae-attachment]').forEach(n=>n.removeAttribute('data-ae-attachment'));return;}
   if(current&&!active(current))close();
-  document.querySelectorAll(own).forEach(n=>{if(!n.closest('.ae-record-card[data-ae-kind="resource"]'))n.remove();});
+  document.querySelectorAll(own).forEach(n=>{if(!n.closest('.ae-record-card[data-ae-kind="resource"]')&&!attachmentOwners.has(n))n.remove();});
   for(const card of document.querySelectorAll('.ae-record-card[data-ae-kind="resource"]')){
    const cell=card.querySelector('[data-ae-primary="true"]')||card;if(cell.querySelector(own)||!info(card))continue;
    const wrap=document.createElement('span');wrap.setAttribute('data-ae-preview-control','');wrap.className='ae-preview-control';
    const button=document.createElement('button');button.type='button';button.setAttribute('data-ae-preview-open','');button.className='ae-preview-trigger';button.textContent='Preview';button.setAttribute('aria-label','Preview '+info(card).title);wrap.append(button);cell.append(wrap);
   }
+  for(const a of document.querySelectorAll('main#content a[href],.Mrphs-toolBody a[href],.portletBody a[href],.attachList a[href],#addSubmissionForm a[href]')){
+   const data=attachmentInfo(a);if(!data||attachmentControls.has(a))continue;
+   a.setAttribute('data-ae-attachment','');const wrap=document.createElement('span');wrap.setAttribute('data-ae-preview-control','');wrap.className='ae-preview-control ae-attachment-preview-control';
+   const button=document.createElement('button');button.type='button';button.setAttribute('data-ae-preview-open','');button.className='ae-preview-trigger';button.textContent='Preview';button.setAttribute('aria-label','Preview '+data.title);wrap.append(button);attachmentControls.set(a,wrap);attachmentOwners.set(wrap,a);a.after(wrap);
+  }
  }
  const schedule=()=>{if(!queued){queued=true;queueMicrotask(sync);}};
- const observer=new MutationObserver(records=>{if(records.every(r=>r.target.parentElement?.closest(own+',.ae-resource-preview')))return;schedule();});observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden','aria-hidden']});
+ const observer=new MutationObserver(records=>{if(records.every(r=>r.target.parentElement?.closest(own+',.ae-resource-preview')))return;schedule();});observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden','aria-hidden','href','onclick']});
  const settings=new MutationObserver(schedule);settings.observe(host.documentElement,{attributes:true,attributeFilter:['class']});
  document.addEventListener('pointerover',hover,{passive:true});document.addEventListener('pointerout',leave,{passive:true});
  // Observe the portal as well as an embedded tool, including viewport exits.
  // Pointer movement is a fallback when a native DOM change suppresses a leave.
  document.addEventListener('pointermove',outside,{passive:true});document.documentElement.addEventListener('pointerleave',boundary,{passive:true});
  if(host!==document){host.addEventListener('pointerover',outside,{passive:true});host.addEventListener('pointermove',outside,{passive:true});host.documentElement.addEventListener('pointerleave',boundary,{passive:true});}
- document.addEventListener('click',e=>{const trigger=e.target.closest?.('[data-ae-preview-open]');if(trigger){const card=trigger.closest('.ae-record-card');if(card)open(card,true);}});
+ document.addEventListener('click',e=>{const trigger=e.target.closest?.('[data-ae-preview-open]');if(trigger){const card=attachmentOwners.get(trigger.closest(own))||trigger.closest('.ae-record-card');if(card)open(card,true);}});
  const key=e=>{if(e.key==='Escape'&&current)close(true);};host.addEventListener('keydown',key);
  const scroll=e=>{if(hoverCard&&!hoverCard.matches(':hover'))cancelHover();if(current&&!contains(current.panel,e?.target)){if(current.pinned)position(current);else close();}};host.addEventListener('scroll',scroll,true);window.addEventListener('scroll',scroll,true);top.addEventListener('resize',scroll);
  const message=e=>{const s=current;if(!s?.frame||e.source!==s.frame.contentWindow||e.origin!==s.viewerOrigin||e.data?.type!==(s.viewerKind==='pdf'?'aether-pdf-preview':'aether-office-preview')||e.data.token!==s.token)return;
