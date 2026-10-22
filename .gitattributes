@@ -1,0 +1,14 @@
+* text=auto
+*.js text eol=lf
+*.cjs text eol=lf
+*.css text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.ttf binary
+*.wasm binary
+*.bcmap binary
+*.png binary
+reports/ export-ignore
+
+# Preserve byte-exact third-party bundles and provenance hashes.
+vendor/office/** -text

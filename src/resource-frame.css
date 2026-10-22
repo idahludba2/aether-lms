@@ -1,0 +1,27 @@
+/* Scoped to an actual Sakai Resources iframe, activated by resource-frame.js.
+   No scripts, click handlers or semantic markup in native controls are altered. */
+html.ae-resource-surface{--ae-resource-ink:#e5f5e9;--ae-resource-accent:#9df1c8;color-scheme:dark}
+html.ae-resource-surface body{background:#101817!important;color:var(--ae-resource-ink)!important}
+html.ae-resource-surface :is(button.btn,a.btn,input[type="button"],input[type="submit"],.dropdown-toggle){
+  background:#223a30!important;color:#dbf5e7!important;border:1px solid #426f59!important;border-radius:4px!important;
+  transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease
+}
+html.ae-resource-surface :is(button.btn,a.btn,input[type="button"],input[type="submit"],.dropdown-toggle):hover{
+  background:#305b46!important;border-color:#9cf0bc!important;box-shadow:0 0 0 1px #9df6c122,0 0 19px #54d59b22;transform:translateY(-1px)
+}
+html.ae-resource-surface :is(button.btn,a.btn,input[type="button"],input[type="submit"],.dropdown-toggle):focus-visible,
+html.ae-resource-surface a:focus-visible{outline:2px solid #adf4d0;outline-offset:2px}
+html.ae-resource-surface :is(table,.table){border-collapse:separate;border-spacing:0;border:1px solid #37574a;border-radius:4px;overflow:hidden}
+html.ae-resource-surface :is(table,.table) :is(th,thead td){background:#20352e!important;color:#e2f7e8!important;border-color:#3d584b!important}
+html.ae-resource-surface :is(table,.table) tbody td{background:#101817!important;color:#d4e6da!important;border-color:#2a4137!important;transition:background .19s ease,box-shadow .19s ease}
+html.ae-resource-surface :is(table,.table) tbody tr:nth-child(even) td{background:#15211c!important}
+html.ae-resource-surface :is(table,.table) tbody tr:hover td,
+html.ae-resource-surface :is(table,.table) tbody tr:focus-within td{background:#244035!important;box-shadow:inset 0 1px #b5fbd422}
+html.ae-resource-surface :is(table,.table) tbody tr:hover td:first-child{box-shadow:inset 3px 0 #92eabb}
+html.ae-resource-surface :is(table,.table) tbody tr:hover a{text-shadow:0 0 13px #aaffd735}
+html.ae-resource-surface :is(input:not([type="checkbox"]),select,textarea){background:#16251f;color:#e6f4ea;border:1px solid #4b6a58}
+html.ae-resource-surface input[type="checkbox"]{accent-color:#7ee2b2}
+@media(prefers-reduced-motion:reduce){html.ae-resource-surface *{transition:none!important}}
+
+html.ae-resource-surface :is(button.btn,a.btn,.dropdown-toggle):hover{background-image:radial-gradient(140px circle at var(--ae-hover-x,50%) var(--ae-hover-y,50%),#c5fbd52b,transparent 85%)!important}
+html.ae-resource-surface tbody tr:hover td:hover{background-image:radial-gradient(170px circle at var(--ae-hover-x,50%) var(--ae-hover-y,50%),#b4ffd61c,transparent 85%)!important}

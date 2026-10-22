@@ -1,0 +1,98 @@
+{
+  "manifest_version": 3,
+  "name": "Aether LMS — The Academic Interface",
+  "description": "An editorial academic workspace with local procedural graphics, tactile records and protected native Sakai workflows.",
+  "version": "1.3.0",
+  "minimum_chrome_version": "109",
+  "icons": {
+    "16": "icons/aether-16.png",
+    "48": "icons/aether-48.png",
+    "128": "icons/aether-128.png"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://lms.lums.edu.pk/*"
+      ],
+      "css": [
+        "src/theme.css",
+        "src/resource-polish.css",
+        "src/cards.css",
+        "src/workspace.css",
+        "src/preview.css",
+        "src/design.css",
+        "src/academic.css"
+      ],
+      "js": [
+        "src/prepaint.js",
+        "src/motion.js",
+        "src/scene.js",
+        "src/ambient.js",
+        "src/dashboard.js",
+        "src/content.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": false
+    },
+    {
+      "matches": [
+        "https://lms.lums.edu.pk/*"
+      ],
+      "js": [
+        "src/motion.js",
+        "src/classifier.js",
+        "src/assignment-state.js",
+        "src/resource-info.js",
+        "src/resource-access.js",
+        "src/lists.js",
+        "src/resource-preview.js"
+      ],
+      "css": [
+        "src/resource-frame.css",
+        "src/resource-polish.css",
+        "src/cards.css",
+        "src/preview.css",
+        "src/design.css",
+        "src/academic.css"
+      ],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "fonts/*.ttf"
+      ],
+      "matches": [
+        "https://lms.lums.edu.pk/*"
+      ]
+    },
+    {
+      "resources": [
+        "preview/pdf.html",
+        "preview/pdf.js",
+        "preview/pdf.css",
+        "preview/office.html",
+        "preview/office.js",
+        "preview/office.css",
+        "preview/zip-guard.js",
+        "vendor/office/*",
+        "vendor/pdfjs/*",
+        "vendor/pdfjs/cmaps/*",
+        "vendor/pdfjs/standard_fonts/*",
+        "vendor/pdfjs/wasm/*"
+      ],
+      "matches": [
+        "https://lms.lums.edu.pk/*"
+      ]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  }
+}

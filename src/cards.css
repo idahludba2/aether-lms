@@ -1,0 +1,149 @@
+@font-face{font-family:"Aether Lato";font-style:normal;font-weight:400;font-display:swap;src:url("chrome-extension://__MSG_@@extension_id__/fonts/Lato-Regular.ttf") format("truetype");}
+@font-face{font-family:"Aether Lato";font-style:normal;font-weight:700;font-display:swap;src:url("chrome-extension://__MSG_@@extension_id__/fonts/Lato-Bold.ttf") format("truetype");}
+/* Aether 0.7. Only content records and extension-owned decoration are positioned. */
+.ae-global-ambient{position:fixed;inset:0;z-index:2147483000;pointer-events:none!important;overflow:hidden;opacity:.38;contain:strict;}
+.ae-global-ambient *{pointer-events:none!important;}
+.ae-global-canvas{display:block;width:100%;height:100%;}
+
+/* The repeated class deliberately outranks the older native-table finish. */
+:is(html.aether-enabled main#content,html.ae-resource-surface) :is(.ae-card-table.ae-card-table,.ae-card-list.ae-card-list){
+  --ae-accent:#a2f5d1;--ae-light:rgba(116,248,195,.19);--ae-edge:rgba(143,223,188,.24);
+  --ae-document:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='none' stroke='%239df8d6' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 3h8l4 4v14H6zM14 3v5h4M9 12h6M9 16h4'/%3E%3C/svg%3E");
+  width:100%!important;max-width:100%;min-width:0;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;overflow:visible!important;
+}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table{display:block;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table>caption{display:block;padding:6px 0 12px;color:#9cb5aa;font:600 10px/1.5 "Aether Lato",Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;text-align:left;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table>thead{display:block;margin-bottom:9px;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-header-row.ae-card-header-row{display:flex;flex-wrap:wrap;gap:8px;grid-column:1/-1;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-header-row.ae-card-header-row>th{display:block;width:auto;border:0!important;border-radius:7px;padding:6px 9px!important;background:#172522!important;color:#a9c9ba!important;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-header-row.ae-card-header-row button{background:transparent;color:inherit;border:0;font:inherit;}
+/* Static column labels remain real headers for assistive technology. Sorting and
+   selection controls keep their native visible, keyboard-accessible elements. */
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-heading-static.ae-card-heading-static{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;border:0!important;overflow:hidden!important;clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table>colgroup{display:none;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-context-row.ae-card-context-row{display:block;grid-column:1/-1;padding:12px 16px;border:1px solid #335348;border-radius:9px;background:#152520;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table .ae-card-context-row.ae-card-context-row>:is(td,th){display:inline-block;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table>tbody,
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-list.ae-card-list{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,245px),1fr));gap:18px;align-items:start;padding:8px 0 25px;list-style:none;margin:0;
+}
+
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card{
+  font-family:"Aether Lato",Arial,sans-serif;--ae-surface-a:#182624;--ae-surface-b:#0e1918;--ae-hover-a:#1c302a;--ae-hover-b:#101d1b;
+  --ae-card-accent:var(--ae-accent,#a2f5d1);--ae-card-light:var(--ae-light,rgba(116,248,195,.19));
+  position:relative;isolation:isolate;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:13px 16px;min-width:0;margin:0;
+  padding:20px!important;border:1px solid var(--ae-edge,rgba(143,223,188,.24))!important;border-radius:17px!important;
+  background:radial-gradient(350px circle at var(--ae-hover-x,75%) var(--ae-hover-y,0%),rgba(128,234,191,.035),transparent 68%),linear-gradient(145deg,var(--ae-surface-a),var(--ae-surface-b) 72%)!important;
+  color:#deeee5;box-shadow:0 4px 5px #0002,0 13px 25px #0003,inset 0 1px #ddffed0b;
+  transform:perspective(950px) translateY(0) rotateX(0deg) rotateY(0deg);
+  transition:transform .28s cubic-bezier(.2,.75,.25,1),box-shadow .28s ease,border-color .22s ease,background-color .22s ease;
+}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card[data-ae-kind="assignment"],
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card[data-ae-kind="assessment"]{--ae-card-accent:#efcf9a;--ae-card-light:rgba(246,204,126,.17);}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card:is([data-ae-kind="assignment"],[data-ae-kind="assessment"]){--ae-document:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='none' stroke='%23efcf9a' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 4H6v17h13V4h-3M9 2h7v5H9zM9 12l2 2 4-4M9 18h7'/%3E%3C/svg%3E");}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card:is([data-ae-kind="discussion"],[data-ae-kind="message"],[data-ae-kind="announcement"]){--ae-card-accent:#a7d9ee;--ae-card-light:rgba(116,208,248,.17);}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card:is([data-ae-kind="discussion"],[data-ae-kind="message"],[data-ae-kind="announcement"]){--ae-document:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='none' stroke='%23a7d9ee' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h16v12H9l-5 4zM8 8h8M8 12h5'/%3E%3C/svg%3E");}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card[data-ae-kind="person"]{--ae-document:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='none' stroke='%239df8d6' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3Cpath d='M4 21v-3c0-6 16-6 16 0v3z'/%3E%3C/svg%3E");}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card::after{
+  content:attr(data-ae-index);position:absolute;right:18px;top:22px;pointer-events:none;color:#638579;font:500 10px/1.4 "Aether Lato",Arial,sans-serif;letter-spacing:.12em;
+}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card:has([data-ae-cell="selection"])::after{right:48px;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card:hover,
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card:focus-within{
+  transform:perspective(950px) translateY(-7px) rotateX(var(--ae-rx,0deg)) rotateY(var(--ae-ry,0deg));
+  border-color:var(--ae-card-accent)!important;z-index:20;
+  background:radial-gradient(320px circle at var(--ae-hover-x,50%) var(--ae-hover-y,20%),var(--ae-card-light),transparent 75%),linear-gradient(145deg,var(--ae-hover-a),var(--ae-hover-b) 78%)!important;
+  box-shadow:0 5px 8px #0003,0 28px 52px #0008,0 10px 30px #72ffbb12,inset 0 1px #e5fff42e;
+}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card:has(.dropdown-menu.show,[aria-expanded="true"]){z-index:40;transform:perspective(950px) translateY(-7px);}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card:has(input[type="checkbox"]:checked){border-color:var(--ae-card-accent)!important;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card[hidden]{display:none!important;}
+
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table .ae-record-card.ae-record-card> :is(td,th){
+  display:block;min-width:0;margin:0;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;
+  color:#d6e6dd!important;font-size:12px;line-height:1.55;overflow-wrap:anywhere;
+}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table .ae-record-card.ae-record-card>[data-ae-cell="meta"]::before,
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table .ae-record-card.ae-record-card>[data-ae-cell="actions"]::before{
+  content:attr(data-ae-label);display:block;margin-bottom:4px;font:600 9px/1.5 "Aether Lato",Arial,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#8cab9d;
+}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table .ae-record-card.ae-record-card>[data-ae-cell="primary"]{order:-2;grid-column:1/-1;padding-bottom:13px!important;margin-bottom:1px;border-bottom:1px solid #9ddab512!important;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table .ae-record-card.ae-record-card>[data-ae-cell="primary"]::before,
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-list.ae-card-list>.ae-record-card::before{
+  content:attr(data-ae-type);display:block;grid-column:1/-1;min-height:31px;padding:8px 48px 9px 36px;margin-bottom:16px;
+  background-image:var(--ae-document);background-repeat:no-repeat;background-position:left center;background-size:26px;
+  color:var(--ae-card-accent);font:600 9px/1.4 "Aether Lato",Arial,sans-serif;letter-spacing:.14em;
+}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table .ae-record-card.ae-record-card>[data-ae-cell="primary"],
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table .ae-record-card.ae-record-card>[data-ae-cell="primary"] a[href]{font:500 17px/1.4 "Aether Lato",Arial,sans-serif!important;letter-spacing:-.025em;color:#edfff4!important;text-decoration:none;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table .ae-record-card.ae-record-card>[data-ae-cell="selection"]{position:absolute;top:21px;right:17px;width:auto;z-index:2;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table .ae-record-card.ae-record-card>[data-ae-cell="selection"]::before{content:none;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table .ae-record-card.ae-record-card>[data-ae-cell="actions"]{grid-column:1/-1;padding-top:8px!important;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table .ae-record-card.ae-record-card>[data-ae-cell="actions"]::before{content:none;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card :is(button.btn,a.btn,.dropdown-toggle){border-radius:8px!important;font-size:11px;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-list.ae-card-list>.ae-record-card{display:block;line-height:1.65;font-size:13px;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-list.ae-card-list>.ae-record-card :is(h2,h3,h4){font-size:17px!important;line-height:1.4!important;color:#edfff4!important;letter-spacing:-.02em;margin:0 0 9px;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-list.ae-card-list>.ae-record-card>a:first-of-type{font-size:16px;font-weight:500;color:#e4fff2!important;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card :is(time,.meta,.metadata,.description){color:#a1bdb0;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-list.ae-card-list .ae-card-list{grid-template-columns:1fr;gap:12px;padding:16px 0 0;}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card :is(a,button,input,select):focus-visible{outline:2px solid #b4ffdd;outline-offset:4px;}
+html.aether-enabled main#content .ae-card-container{overflow:visible!important;}
+
+/* Keep the existing course shortcuts and sidebar in the same material family. */
+html.aether-enabled #aether-workspace .ae-course-card{border-radius:13px;background:linear-gradient(145deg,#1a2c26,#101b19);box-shadow:0 10px 26px #0003;}
+html.aether-enabled #aether-workspace .ae-course-card:hover{box-shadow:0 25px 45px #0007,0 0 25px #8dfac316;border-color:#9ceac8;}
+html.aether-enabled #toolMenu .site-list-item{border-radius:10px!important;}
+html.aether-enabled #toolMenu .site-page-list>li>a{transition:transform .2s ease,box-shadow .2s ease;}
+html.aether-enabled #toolMenu .site-page-list>li>a:hover{transform:translateY(-2px);box-shadow:0 7px 16px #0003;}
+
+html.ae-list-reduced-motion .ae-record-card.ae-record-card{transform:none!important;transition:none!important;}
+html.aether-reduced-motion #toolMenu .site-page-list>li>a{transform:none!important;transition:none!important;}
+@media(prefers-reduced-motion:reduce){.ae-record-card.ae-record-card,html.aether-enabled #toolMenu .site-page-list>li>a{transform:none!important;transition:none!important;}}
+@media(max-width:600px){
+  :is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-list.ae-card-list,
+  :is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table>tbody{grid-template-columns:1fr;gap:15px;}
+}
+
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card [data-ae-primary] a[href$=".pdf" i]::after{content:none!important;}
+
+/* Status remains readable in native cells; these labels also explain the color. */
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card[data-ae-assignment-state="submitted-open"]{
+ --ae-surface-a:#0a2417;--ae-surface-b:#06170f;--ae-hover-a:#123d27;--ae-hover-b:#0a2819;--ae-edge:#3d8761;--ae-card-accent:#a2efbd;--ae-card-light:#63df932b;
+}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card[data-ae-assignment-state="submitted-closed"]{
+ --ae-surface-a:#303637;--ae-surface-b:#202627;--ae-hover-a:#3b4344;--ae-hover-b:#282f30;--ae-edge:#657374;--ae-card-accent:#d6dede;--ae-card-light:#d8eeee24;
+}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card[data-ae-assignment-state="overdue"]{
+ --ae-surface-a:#52272c;--ae-surface-b:#30171d;--ae-hover-a:#653039;--ae-hover-b:#3b1c24;--ae-edge:#b56370;--ae-card-accent:#ffc4cd;--ae-card-light:#ff879b24;
+}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card[data-ae-state-label]::after{
+ content:attr(data-ae-state-label);position:static;grid-column:1/-1;order:9;justify-self:start;max-width:100%;padding:5px 9px;border:1px solid currentColor;border-radius:6px;color:var(--ae-card-accent);font:700 10px/1.5 "Aether Lato",Arial,sans-serif;letter-spacing:.025em;
+}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card :is(button,input,select,textarea){font-family:"Aether Lato",Arial,sans-serif;}
+
+/* Native Assignment controls need sufficient contrast on the dark tool surface. */
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-container :is(button.btn,a.btn,input[type="submit"],input[type="button"]),
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card.ae-record-card :is(button.btn,a.btn,.dropdown-toggle){
+ color:#e0f5e9!important;background-color:#203a30!important;border:1px solid #5b7e6b!important;
+}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-container :is(button.btn,a.btn,input[type="submit"],input[type="button"]):focus-visible{outline:2px solid #b4ffdd;outline-offset:3px;}
+
+/* v0.8.1: native narrow/float-based table controls need a real card-width
+   containing block. Keep Popper's dropdown positioning and transforms intact. */
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table .ae-record-card.ae-record-card>[data-ae-cell="actions"]{
+ width:auto!important;min-width:0!important;max-width:100%;justify-self:stretch;text-align:start!important;text-indent:0!important;float:none!important;
+}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table .ae-record-card.ae-record-card>[data-ae-cell="actions"] :is(.btn-group,.dropdown){
+ float:none!important;margin:0!important;margin-inline:0!important;width:auto!important;max-width:100%;display:inline-flex;vertical-align:top;text-align:start;text-indent:0!important;
+}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table.ae-card-table .ae-record-card.ae-record-card>[data-ae-cell="actions"] :is(.btn-group,.dropdown)>.dropdown-toggle{
+ margin:0!important;float:none!important;max-width:100%;
+}
+/* Native resource lists include empty icon/action columns and helper labels. */
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card>[data-ae-cell="empty"]{display:none!important}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-card-table :is(.sr-only,.visually-hidden,.skip){position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}
+/* Supply only missing static positioning; Popper retains its own coordinates. */
+:is(html.aether-enabled main#content,html.ae-resource-surface) .ae-record-card [data-ae-cell="actions"] :is(.btn-group,.dropdown)>.dropdown-menu:not([data-popper-placement]):not([x-placement]):not([data-bs-popper]):not([style*="transform"]){top:100%;inset-inline-start:0;max-width:min(320px,calc(100vw - 48px));white-space:normal}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .resource-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:10px 0 18px}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .resource-toolbar label{display:flex;flex-wrap:wrap;align-items:center;gap:6px;max-width:100%;min-width:0}
+:is(html.aether-enabled main#content,html.ae-resource-surface) .resource-toolbar :is(button,input,select){max-width:100%;font:inherit;color:#eaf4f5;background:#192b33;border:1px solid #526b78;border-radius:3px}
