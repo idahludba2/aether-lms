@@ -4,7 +4,7 @@
 (() => {
   "use strict";
   if (window.top !== window || location.hostname !== "lms.lums.edu.pk") return;
-  if (!/^\/portal(?:\/|$)/.test(location.pathname)) return;
+  if (!/^\/+portal(?:\/|$)/.test(location.pathname)) return;
   const doc = document.documentElement;
   if (doc.dataset.aetherV08 === "installed") return;
   doc.dataset.aetherV08 = "installed";
@@ -80,6 +80,8 @@
     return label((visible||titles[0])?.textContent);
   }
   function context(){const main=document.querySelector("main#content.portal-main-content");if(!main)return null;
+    // The public gateway keeps Sakai's original sign-in form and welcome content.
+    if(document.querySelector('.portal-header input[type="password"],#loginForm input[type="password"]'))return null;
     const collection=sites(),active=collection.find(s=>s.active), isHome=active?.home||(!active&&!!main.querySelector(".Mrphs-sakai-summary-calendar"));
     const title=pageTitle();
     const assignment=/^assignments?$/i.test(title)||!!main.querySelector(".Mrphs-sakai-assignment-grades"),menu=tools();
@@ -105,7 +107,7 @@
     const t=toolbar?.querySelector(".ae-toggle-word");if(t)t.textContent=enabled?"ON":"OFF";
     if(scene)scene.setMotion(enabled&&motion);
     if(ambientScene)ambientScene.setMotion(enabled&&motion);
-    if(enabled)scheduleEffects(effectCanvas);else{cancelEffectsStart();disposeAmbient();}
+    if(enabled){mountAmbient();scheduleEffects(effectCanvas);}else{cancelEffectsStart();disposeAmbient();}
     doc.classList.toggle("ae-page-resources",enabled&&Boolean(context()?.resources));
     try{localStorage.setItem(K.enabled,String(enabled));}catch{}
     window.dispatchEvent(new Event("aether-settings-change"));
@@ -243,7 +245,7 @@
       }catch(error){console.debug('Aether scene unavailable',error);}
     });});
   }
-  function render(force=false){mountToolbar();const ctx=context();if(!ctx)return;
+  function render(force=false){mountToolbar();const ctx=context();if(!ctx){if(enabled)mountAmbient();return;}
     if(!force&&ctx.signature===renderedSignature&&workspace?.isConnected)return;
     const key=[ctx.home,ctx.courseTitle,ctx.toolTitle,ctx.resources,ctx.assignment].join('|');
     const oldHero=key===heroSignature?workspace?.querySelector('.ae-hero'):null;

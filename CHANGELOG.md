@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Start Aether automatically on Sakai entry URLs with repeated leading slashes, including `//portal`, while retaining the LMS host and portal-path restrictions.
+- Apply the theme, Aether toggle, and ambient field to the public gateway without adding a course workspace or replacing the native sign-in form.
+- Add real-extension regressions for entry routes, late Home markup, gateway form submission and toggles, double-slash file previews, and unrelated-path exclusion.
+
 ## 1.3.0 — 23 October 2026
 
 - Generalized Resources cards for TA/instructor management forms, native action selectors, extra columns, pagination/context rows and same-origin tool frames.

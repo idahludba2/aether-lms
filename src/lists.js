@@ -3,7 +3,7 @@
   'use strict';
   let topDoc;
   try {
-    if(top.location.hostname!=='lms.lums.edu.pk'||!/^\/portal(?:\/|$)/.test(top.location.pathname))return;
+    if(top.location.hostname!=='lms.lums.edu.pk'||!/^\/+portal(?:\/|$)/.test(top.location.pathname))return;
     topDoc=top.document;
   } catch {return;}
   const root=document.documentElement,framed=window!==top;

@@ -2,7 +2,8 @@
 (() => {
   "use strict";
   if (window.top !== window || location.hostname !== "lms.lums.edu.pk") return;
-  if (!/^\/portal(?:\/|$)/.test(location.pathname)) return;
+  // Sakai entry links can contain repeated leading slashes (for example //portal).
+  if (!/^\/+portal(?:\/|$)/.test(location.pathname)) return;
   try {
     const enabled = localStorage.getItem("aether:v02:enabled") !== "false";
     document.documentElement.classList.toggle("aether-enabled", enabled);

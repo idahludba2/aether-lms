@@ -21,7 +21,7 @@ Dependencies are pinned through `package-lock.json`. Use `npm ci --ignore-script
 The development-only PowerPoint generator's `image-size` dependency is overridden to patched version 2.0.4 to address its parser denial-of-service advisories. CI regenerates the fictional Office fixtures before running their preview regressions, checking compatibility with this override. No extension runtime bundle is changed by this override.
 
 - `npm run test:unit`: unit, parsing, archive-boundary, and bundled-reader integrity checks.
-- `npm run test:startup`: deliberately delayed-page startup checks.
+- `npm run test:startup`: deliberately delayed-page startup checks, single/double-slash portal entry routes, and native gateway sign-in preservation.
 - `npm run test:browser`: main Chrome extension regressions, including tool frames and file previews.
 - `node tests/fallbacks.cjs`: WebGL-disabled and cancellation checks.
 - `node tests/browser.cjs --smoke`: package-oriented checks, including hover dismissal and role/document variants.
