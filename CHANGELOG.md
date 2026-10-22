@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add colored borders and real text badges for assignment urgency, confirmed submission, revision, excused/cancelled work, and unknown states; keep draft, grade, feedback, and confirmed lateness separate.
+- Keep submitted work mint after deadlines and update urgency/countdowns automatically without inferring lateness from the current clock.
+- Add local Unopened/Opened/Updated file states and temporary failure labels, recording deliberate opens and successful explicit previews only. Version changes invalidate the preview cache.
+- Bound opened history to 1,000 hashed resource/version entries with timestamps, and add Clear file history without storing filenames, raw URLs, documents, or grades.
 - Open larger file readers with an expand/restore control and pointer/keyboard resizing; PDF pages redraw on resize and offer zoom and fit-width controls.
 - Preview existing assignment and draft attachments, including supported slides and Office files, without replacing their native links, forms, or submission controls.
 - Build the Home course deck and count from native pinned sites, excluding Recent entries, updating after pin changes, and showing an empty state when no courses are pinned.

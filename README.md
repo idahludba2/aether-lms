@@ -35,17 +35,20 @@ To update, back up your current folder, replace its contents with the new versio
 | Folded field | A procedural 3D particle sculpture with progressive startup and a Canvas fallback when WebGL is unavailable. |
 | Resources | Cards for student, TA, and instructor browsing views, including supported management lists and embedded Sakai tools. |
 | Native resource controls | Original file and folder links, action menus, selection checkboxes, sorting, pagination, and permitted add/upload/delete controls remain available. Editing fields retain their native layout. |
-| Assignments | Clearer cards and status labels for confirmed submissions and deadlines. Ambiguous dates or unknown submission states are treated conservatively. |
+| Assignments | Colored borders and text badges distinguish submitted, not submitted, due soon (24 hours), due shortly (2 hours), overdue, not open, revision, excused, and cancelled states when confirmed by Sakai. Draft, grade, feedback, and confirmed late-submission badges remain separate. Unknown states stay neutral. |
 | Gradebook | Cards for read-only grade summaries, including scores, feedback, and release states. Editable grade grids and comparison tables keep their layout with matching styling. |
 | Roster | Matching cards, photo views, and tables, retaining permitted profile details, groups, search, sorting, and pagination. |
 | Other lists | Recognized announcement and activity lists receive matching styling where supported. |
 | File previews | Read supported Resources files and assignment/draft attachments inside the LMS, with larger readers, resizing, and expand/restore controls. Files stay local to the LMS and bundled reader. See the formats below. |
+| File states | Cyan Unopened, slate Opened, violet Updated when version changes are confirmed, and labeled access/preview failures. Open history stays on this device and can be cleared in the preview footer. Hovering does not mark files opened. |
 | Copyright notices | Read the native notice in the preview and choose **Yes, accept and preview** to continue in the same panel. Acceptance requires your click. |
 | Hover behavior | Hover briefly to preview; moving away from both the resource and panel closes it immediately. Select **Preview** to keep a reader open. |
 | Accessibility | Keyboard controls, visible focus, Escape to close previews, responsive layouts, and support for your system's reduced-motion preference. |
 | Your choice | **AETHER ON/OFF** restores the original Sakai layout. **MOTION ON/OFF** controls animation separately and saves your preference. |
 
 Native authentication, access permissions, forms, and actions remain in Sakai. Aether does not grant access to hidden grades or restricted files. The Home activity panel uses only the current page; its decorative graphic does not measure grades, progress, or deadlines.
+
+Submitted assignments stay mint even after their deadline. A **Late** badge requires an explicit native late status or a confirmed submission timestamp after the applicable due date. **Draft saved** does not mean submitted. Due dates remain visible in Sakai's original fields, with relative time labels updating automatically. Opened-file history starts when this feature is used and does not reconstruct past reading activity. See [PRIVACY.md](PRIVACY.md) for storage details.
 
 ## Preview formats
 

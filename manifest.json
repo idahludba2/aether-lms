@@ -46,6 +46,7 @@
         "src/classifier.js",
         "src/assignment-state.js",
         "src/resource-info.js",
+        "src/file-state.js",
         "src/resource-access.js",
         "src/lists.js",
         "src/resource-preview.js"
