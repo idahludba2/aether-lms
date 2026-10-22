@@ -27,7 +27,7 @@ function entryPage(url){
   });
   const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
   async function run(name,fn){try{await fn();results.push({name,passed:true});console.log('PASS',name);}catch(e){results.push({name,passed:false,error:e.message});console.log('FAIL',name,e.message);}}
-  for(const pathname of ['/portal','//portal','/portal/','//portal/site/home'])await run('Home activates without interaction at '+pathname,async()=>{
+  for(const pathname of ['/','/portal','//portal','/portal/','//portal/site/home'])await run('Home activates without interaction at '+pathname,async()=>{
    await page.goto(origin+pathname);
    await page.locator('#aether-workspace .ae-hero-home').waitFor();
    assert(await page.evaluate(()=>window.aetherFirstParserSnapshot.enabled));
@@ -37,12 +37,12 @@ function entryPage(url){
    await page.locator('#aether-global-ambient').waitFor();
    if(pathname==='//portal')await page.screenshot({path:path.join(reportDir,'double-slash-home.png')});
   });
-  await run('Late Home shell activates after DOMContentLoaded without a click',async()=>{
-   await page.goto(origin+'//portal?delayed=1');
+  for(const pathname of ['/','//portal'])await run('Late Home shell activates after DOMContentLoaded at '+pathname,async()=>{
+   await page.goto(origin+pathname+'?delayed=1');
    await page.locator('#aether-workspace .ae-hero-home').waitFor();
    assert.equal(await page.locator('#aether-workspace').count(),1);
   });
-  for(const pathname of ['/portal','//portal'])await run('Gateway theme preserves native sign-in at '+pathname,async()=>{
+  for(const pathname of ['/','/portal','//portal'])await run('Gateway theme preserves native sign-in at '+pathname,async()=>{
    await page.goto(origin+pathname+'?gateway=1');
    await page.locator('#aether-native-toggle').waitFor();
    await page.locator('#aether-global-ambient').waitFor();
@@ -62,14 +62,28 @@ function entryPage(url){
    await page.locator('#aether-global-ambient').waitFor();
    assert.equal(await page.locator('#native-help').getAttribute('href'),'/portal/help');
   });
-  await run('Double-slash course resources retain cards and preview controls',async()=>{
+  await run('Root gateway OFF preference survives reload, and ON restores automatic startup',async()=>{
+   await page.goto(origin+'/?gateway=1');
+   await page.locator('#aether-native-toggle').click();
+   await page.reload();
+   await page.locator('#aether-native-toggle[aria-pressed="false"]').waitFor();
+   assert.equal(await page.locator('html.aether-enabled,#aether-global-ambient').count(),0);
+   assert(await page.locator('#loginForm').isVisible());
+   await page.locator('#aether-native-toggle').click();
+   await page.reload();
+   await page.locator('#aether-global-ambient').waitFor();
+   assert.equal(await page.locator('#aether-workspace').count(),0);
+   await page.goto(origin+'/');
+   await page.locator('#aether-workspace .ae-hero-home').waitFor();
+  });
+  for(const pathname of ['/','//portal/site/cs200/page/Resources?tool=Resources'])await run('Resource cards and previews work under '+pathname,async()=>{
    await context.unroute('https://**/*');
    await context.route('https://**/*',route=>{
     const u=new URL(route.request().url());if(u.origin!==origin)return route.abort();
     if(u.pathname.startsWith('/access/content/'))return route.fulfill({contentType:'text/plain',body:'Fictional preview on a double-slash portal.'});
     return route.fulfill({contentType:'text/html',body:fixture(origin+'/portal/site/cs200/page/Resources?tool=Resources')});
    });
-   await page.goto(origin+'//portal/site/cs200/page/Resources?tool=Resources');
+   await page.goto(origin+pathname);
    await page.locator('#resource-2.ae-record-card [data-ae-preview-open]').waitFor();
    assert.equal(await page.locator('#aether-workspace').count(),1);
    await page.locator('#resource-2 [data-ae-preview-open]').click();

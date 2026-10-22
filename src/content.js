@@ -4,7 +4,7 @@
 (() => {
   "use strict";
   if (window.top !== window || location.hostname !== "lms.lums.edu.pk") return;
-  if (!/^\/+portal(?:\/|$)/.test(location.pathname)) return;
+  if (!/^\/+(?:portal(?:\/|$)|$)/.test(location.pathname)) return;
   const doc = document.documentElement;
   if (doc.dataset.aetherV08 === "installed") return;
   doc.dataset.aetherV08 = "installed";
@@ -81,7 +81,7 @@
   }
   function context(){const main=document.querySelector("main#content.portal-main-content");if(!main)return null;
     // The public gateway keeps Sakai's original sign-in form and welcome content.
-    if(document.querySelector('.portal-header input[type="password"],#loginForm input[type="password"]'))return null;
+    if(document.body?.classList.contains('is-logged-out')||document.querySelector('.portal-header input[type="password"],#loginForm input[type="password"]'))return null;
     const collection=sites(),active=collection.find(s=>s.active), isHome=active?.home||(!active&&!!main.querySelector(".Mrphs-sakai-summary-calendar"));
     const title=pageTitle();
     const assignment=/^assignments?$/i.test(title)||!!main.querySelector(".Mrphs-sakai-assignment-grades"),menu=tools();

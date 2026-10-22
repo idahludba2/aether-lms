@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Start Aether automatically on Sakai entry URLs with repeated leading slashes, including `//portal`, while retaining the LMS host and portal-path restrictions.
+- Start Aether automatically on the bare LMS domain (`/`) and Sakai entry URLs with repeated leading slashes, including `//portal`, while retaining the LMS host and route restrictions.
 - Apply the theme, Aether toggle, and ambient field to the public gateway without adding a course workspace or replacing the native sign-in form.
 - Add real-extension regressions for entry routes, late Home markup, gateway form submission and toggles, double-slash file previews, and unrelated-path exclusion.
 

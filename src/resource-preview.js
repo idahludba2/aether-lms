@@ -1,7 +1,7 @@
 /* Small, read-only resource peeks. Native anchors/forms keep their handlers. */
 (() => {
  'use strict';
- let host;try{if(top.location.hostname!=='lms.lums.edu.pk'||!/^\/+portal(?:\/|$)/.test(top.location.pathname))return;host=top.document;}catch{return;}
+ let host;try{if(top.location.hostname!=='lms.lums.edu.pk'||!/^\/+(?:portal(?:\/|$)|$)/.test(top.location.pathname))return;host=top.document;}catch{return;}
  const origin=top.location.origin,baseURL=/^https:/.test(document.baseURI)?document.baseURI:top.location.href;
  const own='[data-ae-preview-control]',cache=new Map(),MAX=12*1024*1024;
  let pending=0,hoverCard=null,queued=false,current=null,cacheBytes=0;
