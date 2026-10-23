@@ -83,16 +83,18 @@ module.exports=async({page,context,test,go,preview,reportDir,assert})=>{
    assert.equal(await page.locator('#academic-form .ae-record-card').count(),0);assert.equal(await page.locator('input[name=csrf]').inputValue(),'fixture-only-token');
    await page.locator('#draft').click();assert.equal(await page.locator('#draft').getAttribute('data-saved'),'true');
   });
+  // Escape removes its own frame: dispatch to the focused reader, then await removal.
   await test('Reader features: draft attachments preview Word files and keep keyboard focus',async()=>{
    await prepare();const button=page.getByRole('button',{name:'Preview Draft notes.docx',exact:true});await button.click();await page.locator('#aether-resource-preview[data-office-kind="document"]').waitFor();await page.frameLocator('.ae-preview-office').getByText('Seminar notes',{exact:true}).waitFor();
-   await page.frameLocator('.ae-preview-office').locator('body').press('Escape');assert.equal(await panel.count(),0);assert(await button.evaluate(n=>n===document.activeElement));
+   await page.frameLocator('.ae-preview-office').locator('#document').evaluate(node=>{node.tabIndex=-1;node.focus();});assert(await page.locator('.ae-preview-office').evaluate(frame=>document.activeElement===frame));try{await page.keyboard.down('Escape');await panel.waitFor({state:'detached'});}finally{await page.keyboard.up('Escape');}assert.equal(await panel.count(),0);assert(await button.evaluate(n=>n===document.activeElement));
   });
   await test('Reader features: removed attachments close their reader, and OFF removes preview controls',async()=>{
    await prepare();await page.getByRole('button',{name:'Preview Assignment slides.pptx',exact:true}).click();await panel.waitFor();await page.evaluate(()=>document.getElementById('slides').closest('li').remove());await panel.waitFor({state:'detached'});
    await page.locator('#aether-native-toggle').click();assert.equal(await page.locator('#assignment-files [data-ae-preview-open],#assignment-files [data-ae-attachment]').count(),0);assert.equal(await page.locator('#answer').inputValue(),'Fictional unsaved draft answer');await page.locator('#aether-native-toggle').click();await page.getByRole('button',{name:'Preview Draft notes.docx',exact:true}).waitFor();
   });
+  // The message exists during loading too; wait for the actual permission response.
   await test('Reader features: attachment permission failures retain the original link and never submit forms',async()=>{
-   await prepare();await page.getByRole('button',{name:'Preview Restricted feedback.pdf',exact:true}).click();await panel.locator('.ae-preview-message').waitFor();assert.match(await panel.locator('.ae-preview-message').textContent(),/permission/);assert(await panel.getByRole('button',{name:'Open original',exact:true}).isVisible());assert(await page.locator('#confirmation').isHidden());assert(attachmentRequests.every(r=>r.method==='GET'));assert(!attachmentRequests.some(r=>r.url.includes('example.invalid')));await close();
+   await prepare();await page.getByRole('button',{name:'Preview Restricted feedback.pdf',exact:true}).click();await panel.locator('.ae-preview-message').filter({hasText:/permission/}).waitFor();assert.match(await panel.locator('.ae-preview-message').textContent(),/permission/);assert(await panel.getByRole('button',{name:'Open original',exact:true}).isVisible());assert(await page.locator('#confirmation').isHidden());assert(attachmentRequests.every(r=>r.method==='GET'));assert(!attachmentRequests.some(r=>r.url.includes('example.invalid')));await close();
   });
   await test('Reader features: attachments inside Sakai tool frames use the same top-level reader',async()=>{
    const frameRoute=origin+'/tool/assignment-attachments';
