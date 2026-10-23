@@ -49,6 +49,7 @@ const test=async(name,fn)=>{
  await test('OFF restores native records and survives reload',async()=>{await go('Resources');await page.locator('#aether-native-toggle').click();assert.equal(await page.locator('.ae-record-card').count(),0);assert.equal(await page.locator('[data-ae-preview-open]').count(),0);assert.equal(await page.locator('#aether-workspace').isVisible(),false);assert.equal(await page.locator('#records').evaluate(e=>getComputedStyle(e).display),'table');await page.reload();assert.equal(await page.locator('html.aether-enabled').count(),0);await page.locator('#aether-native-toggle').click();await page.locator('.ae-record-card').first().waitFor();});
  if(!baseline)await require('./reader-features.cjs')({page,context,test,go,preview,reportDir,assert});
  if(!baseline)await require('./status-colors.cjs')({page,context,test,go,preview,reportDir,assert});
+ if(!baseline)await require('./course-fade.cjs')({page,test,go,reportDir,assert});
  if(!baseline&&!smoke)await require('./extended.cjs')({page,context,test,go,card,preview,reportDir,assert,requests,errors});
  if(!baseline&&smoke)await require('./hover-preview.cjs')({page,context,test,go,assert});
  if(!baseline&&smoke)await require('./resource-variants.cjs')({page,context,test,go,reportDir,assert,requests});

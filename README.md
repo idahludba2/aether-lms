@@ -33,6 +33,7 @@ To update, back up your current folder, replace its contents with the new versio
 | Navigation | Reorder course and tool shortcuts with drag-and-drop or keyboard buttons; your order is saved locally. |
 | Appearance | Dark panels, mint and cyan accents, bundled fonts, page-wide stars, glowing sparkles, pointer glow, and contour lines. |
 | Folded field | A procedural 3D particle sculpture with progressive startup and a Canvas fallback when WebGL is unavailable. |
+| Course dissolve | Existing pinned course boxes fade at the scroll edges while their titles dissolve into local particles and reform on return. Course links stay native; keyboard focus, reordering, Motion Off, and the system reduced-motion preference show solid cards. |
 | Resources | Cards for student, TA, and instructor browsing views, including supported management lists and embedded Sakai tools. |
 | Native resource controls | Original file and folder links, action menus, selection checkboxes, sorting, pagination, and permitted add/upload/delete controls remain available. Editing fields retain their native layout. |
 | Assignments | Full-card color fills in the v1.3 style and text badges distinguish submitted, not submitted, due soon (24 hours), due shortly (2 hours), overdue, not open, revision, excused, and cancelled states when confirmed by Sakai. Draft, grade, feedback, and confirmed late-submission badges remain separate. Unknown states stay neutral. |

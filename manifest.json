@@ -29,6 +29,7 @@
       "js": [
         "src/prepaint.js",
         "src/motion.js",
+        "src/course-fade.js",
         "src/scene.js",
         "src/ambient.js",
         "src/dashboard.js",
