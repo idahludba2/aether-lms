@@ -23,6 +23,11 @@ module.exports=async({page,context,test,go,preview,reportDir,assert})=>{
   assert.equal(await page.locator('#case-soon .ae-assignment-status').evaluate(n=>getComputedStyle(n).color),'rgb(251, 191, 36)');
   assert.equal(await page.locator('#case-shortly .ae-assignment-status').evaluate(n=>getComputedStyle(n).color),'rgb(251, 146, 60)');
   assert.equal(await page.locator('#case-overdue .ae-assignment-status').evaluate(n=>getComputedStyle(n).color),'rgb(251, 113, 133)');
+  const fills=await page.locator('#assignments .ae-record-card').evaluateAll(rows=>rows.map(row=>{const style=getComputedStyle(row);return {state:row.dataset.aeAssignmentState,background:style.backgroundImage,left:style.borderLeftWidth,right:style.borderRightWidth};}));
+  assert(fills.every(card=>card.left===card.right),'Assignment cards must not use a side accent stripe');
+  assert(fills.find(card=>card.state==='submitted').background.includes('rgb(10, 36, 23)'),'Submitted color fills the card');
+  assert(fills.find(card=>card.state==='overdue').background.includes('rgb(82, 39, 44)'),'Overdue color fills the card');
+  assert.equal(new Set(fills.filter(card=>['not-submitted','due-soon','due-shortly','submitted','overdue','unknown'].includes(card.state)).map(card=>card.background)).size,6);
   assert.equal(await page.locator('#case-submitted-past [data-status-kind=late]').count(),0);assert.equal(await page.locator('#case-late [data-status-kind=late]').count(),1);
   assert.equal(await page.locator('#case-soon [data-status-kind=draft]').count(),1);assert.equal(await page.locator('#case-overdue [data-status-kind=late-allowed]').count(),1);assert.match(await page.locator('#case-submitted-past [data-status-kind=graded]').textContent(),/18 \/ 20/);
   await page.screenshot({path:path.join(reportDir,'assignment-status-colors.png'),fullPage:true});

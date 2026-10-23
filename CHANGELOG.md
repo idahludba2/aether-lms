@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Add colored borders and real text badges for assignment urgency, confirmed submission, revision, excused/cancelled work, and unknown states; keep draft, grade, feedback, and confirmed lateness separate.
+- Restore v1.3 full-card assignment color fills, including its green submitted and red overdue materials, with matching fills for the additional urgency states. Remove the side accent stripe and retain real text badges for submission, draft, grading, feedback, and confirmed lateness.
 - Keep submitted work mint after deadlines and update urgency/countdowns automatically without inferring lateness from the current clock.
 - Add local Unopened/Opened/Updated file states and temporary failure labels, recording deliberate opens and successful explicit previews only. Version changes invalidate the preview cache.
 - Bound opened history to 1,000 hashed resource/version entries with timestamps, and add Clear file history without storing filenames, raw URLs, documents, or grades.

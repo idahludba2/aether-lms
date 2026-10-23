@@ -35,7 +35,7 @@ To update, back up your current folder, replace its contents with the new versio
 | Folded field | A procedural 3D particle sculpture with progressive startup and a Canvas fallback when WebGL is unavailable. |
 | Resources | Cards for student, TA, and instructor browsing views, including supported management lists and embedded Sakai tools. |
 | Native resource controls | Original file and folder links, action menus, selection checkboxes, sorting, pagination, and permitted add/upload/delete controls remain available. Editing fields retain their native layout. |
-| Assignments | Colored borders and text badges distinguish submitted, not submitted, due soon (24 hours), due shortly (2 hours), overdue, not open, revision, excused, and cancelled states when confirmed by Sakai. Draft, grade, feedback, and confirmed late-submission badges remain separate. Unknown states stay neutral. |
+| Assignments | Full-card color fills in the v1.3 style and text badges distinguish submitted, not submitted, due soon (24 hours), due shortly (2 hours), overdue, not open, revision, excused, and cancelled states when confirmed by Sakai. Draft, grade, feedback, and confirmed late-submission badges remain separate. Unknown states stay neutral. |
 | Gradebook | Cards for read-only grade summaries, including scores, feedback, and release states. Editable grade grids and comparison tables keep their layout with matching styling. |
 | Roster | Matching cards, photo views, and tables, retaining permitted profile details, groups, search, sorting, and pagination. |
 | Other lists | Recognized announcement and activity lists receive matching styling where supported. |
